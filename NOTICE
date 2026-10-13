@@ -1,0 +1,44 @@
+# Third-party notices
+
+This project is distributed under the MIT License (see `LICENSE`). It contains code
+derived from another MIT-licensed work, whose notice is reproduced below as that
+license requires.
+
+The notice is a legal requirement of the MIT License — it must be included in copies
+and substantial portions of the software — and it is the only thing this file is for.
+It is not a statement about who maintains this project.
+
+---
+
+## handoff-od
+
+MIT License
+
+Copyright (c) 2026 Andre Ross / Ross Technologies
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+---
+
+## @ross-sec/sync-od
+
+Not bundled here, and not a dependency. It is referenced at runtime only: the handoff
+prompt this project emits tells the receiving coding agent to push its changes back to
+Open Design with `@ross-sec/sync-od`, which is the reverse direction and a separate
+package. Nothing in this repository links against or redistributes it.

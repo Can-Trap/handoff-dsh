@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.tgz
+.env
+.handoff/
+.reference-private/
+docs/superpowers/plans/
+
+# Local project management — not published (sync-od ships neither)
+.paul/
+docs/

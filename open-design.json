@@ -1,0 +1,132 @@
+{
+  "$schema": "https://open-design.ai/schemas/plugin.v1.json",
+  "specVersion": "1.0.0",
+  "name": "handoff-dsh",
+  "title": "Handoff to DeepSeek Harness",
+  "version": "0.1.0",
+  "description": "Hand this project off to DeepSeek Harness — an offline-complete handoff bundle with a verbatim project mirror, the design system materialized with real font binaries, a machine-enforced adherence config, and an optional authored implementation spec. The companion DSH bundle in dsh/ receives it: it re-verifies the archive and extracts it verbatim instead of trusting it.",
+  "license": "MIT",
+  "author": {
+    "name": "Trap",
+    "url": "https://github.com/Can-Trap"
+  },
+  "homepage": "https://github.com/Can-Trap/handoff-dsh",
+  "icon": "./icon.svg",
+  "tags": [
+    "export",
+    "handoff",
+    "deepseek-harness",
+    "dsh",
+    "code-agent",
+    "design-to-code"
+  ],
+  "compat": {
+    "agentSkills": [
+      { "path": "./SKILL.md" }
+    ]
+  },
+  "od": {
+    "kind": "scenario",
+    "taskKind": "tune-collab",
+    "scenario": "downstream-export",
+    "mode": "handoff",
+    "platform": "desktop",
+    "engineRequirements": {
+      "od": ">=0.15.0"
+    },
+    "preview": {
+      "type": "html",
+      "entry": "./preview/index.html",
+      "motion": "static"
+    },
+    "useCase": {
+      "query": {
+        "en": "Hand this project off to DeepSeek Harness. Follow the handoff-dsh skill: collect the project name, cwd and active file, then run the bundled scripts one phase at a time, checking each DONE-gate before the next. Report the exact path of the finished archive, or the prompt to paste, plus any warnings the run produced.",
+        "zh-CN": "将此项目交接给 DeepSeek Harness。请遵循 handoff-dsh 技能：先获取项目名称、工作目录和当前打开的文件，然后逐个阶段运行内置脚本，在进入下一阶段前检查每个 DONE 关卡。最后报告生成的归档文件的确切路径（或可粘贴的提示词），以及本次运行产生的所有警告。"
+      }
+    },
+    "context": {
+      "atoms": [
+        "design-extract",
+        "token-map",
+        "todo-write",
+        "diff-review",
+        "handoff"
+      ]
+    },
+    "pipeline": {
+      "stages": [
+        { "id": "detect", "atoms": ["design-extract", "token-map"], "onFailure": "abort" },
+        { "id": "bundle", "atoms": ["todo-write"], "onFailure": "abort" },
+        { "id": "verify", "atoms": ["diff-review"], "onFailure": "abort" },
+        { "id": "handoff", "atoms": ["handoff"], "onFailure": "abort" }
+      ]
+    },
+    "genui": {
+      "surfaces": [
+        {
+          "id": "handoff-ready",
+          "kind": "confirmation",
+          "persist": "run",
+          "trigger": { "stageId": "handoff" },
+          "prompt": "Handoff bundle is ready in the project cwd. Open it in DeepSeek Harness?",
+          "timeout": 300000,
+          "onTimeout": "default",
+          "default": true
+        }
+      ]
+    },
+    "inputs": [
+      {
+        "name": "depth",
+        "type": "select",
+        "label": "Depth",
+        "required": false,
+        "options": ["bundle", "spec", "both"],
+        "default": "both"
+      },
+      {
+        "name": "feature",
+        "type": "string",
+        "label": "Feature scope",
+        "required": false,
+        "placeholder": "auth system"
+      },
+      {
+        "name": "transport",
+        "type": "select",
+        "label": "Transport",
+        "required": false,
+        "options": ["zip", "mcp", "both"],
+        "default": "zip"
+      },
+      {
+        "name": "includeChats",
+        "type": "boolean",
+        "label": "Include conversation transcript",
+        "required": false,
+        "default": false
+      },
+      {
+        "name": "rootPointers",
+        "type": "boolean",
+        "label": "Emit AGENTS.md / CLAUDE.md pointers",
+        "required": false,
+        "default": true
+      },
+      {
+        "name": "verification",
+        "type": "boolean",
+        "label": "Add a visual-verification section to the spec",
+        "required": false,
+        "default": false
+      }
+    ],
+    "capabilities": [
+      "prompt:inject",
+      "fs:read",
+      "fs:write",
+      "bash"
+    ]
+  }
+}

@@ -1,0 +1,31 @@
+# The receiving end of a handoff-dsh bundle, for DeepSeek Harness.
+#
+# Row 1 is this bundle's Host plugin: handoff_inspect / handoff_import /
+# handoff_brief. It is the archive transport, and it re-reads the container
+# itself (ZIP central directory and CRCs, or ustar/pax headers) instead of
+# shelling out, so the verification does not share code with the writer.
+#
+# Row 2 is the OTHER transport: the Open Design MCP server (`od mcp`) as a stdio
+# client, so a handoff can be read live and never goes stale. It ships DISABLED
+# because `od` is installed with the Open Design desktop app and is usually not
+# on PATH, and a row whose command cannot be spawned fails activation. Enable it
+# once `od mcp` runs on this machine:
+#
+#     plugin_manager set_plugin od-mcp enabled:true
+#
+# The same snippet is what scripts/hdd-prompt.js hands a receiving agent when it
+# emits the MCP form of the handoff prompt.
+- insert:
+    - id: handoff-tools
+      name: '@local/dsh-handoff'
+
+    - id: od-mcp
+      name: '@deepseek-ai/dsh-mcp-client'
+      disabled: true
+      config:
+        serverName: opendesign
+        transport: stdio
+        command: od
+        args:
+          - mcp
+        failOnStartupError: true

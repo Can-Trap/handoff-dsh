@@ -1,0 +1,53 @@
+{
+  "name": "handoff-dsh",
+  "version": "0.1.0",
+  "description": "Open Design plugin that hands a design project off to DeepSeek Harness — offline-complete handoff bundle, materialized design system, lintable adherence config, optional authored implementation spec, plus the companion DSH bundle that receives it.",
+  "type": "module",
+  "files": [
+    "SKILL.md",
+    "open-design.json",
+    "scripts",
+    "references",
+    "agents",
+    "preview",
+    "dsh",
+    "icon.svg",
+    "CHANGELOG.md",
+    "README.md",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "scripts": {
+    "test": "node --test",
+    "validate": "node scripts/hdd-validate.js --self",
+    "prepublishOnly": "npm test && npm run validate"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Can-Trap/handoff-dsh.git"
+  },
+  "homepage": "https://github.com/Can-Trap/handoff-dsh#readme",
+  "bugs": {
+    "url": "https://github.com/Can-Trap/handoff-dsh/issues"
+  },
+  "keywords": [
+    "open-design",
+    "open-design-plugin",
+    "handoff",
+    "deepseek-harness",
+    "dsh",
+    "design-handoff",
+    "design-tokens",
+    "design-system",
+    "design-to-code",
+    "code-agent"
+  ],
+  "author": "Trap",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  }
+}

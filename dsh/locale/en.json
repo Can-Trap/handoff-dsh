@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Handoff (Open Design)",
+    "description": "Inspect, import and read an Open Design handoff bundle: handoff_inspect verifies an archive's own bytes against the bundle contract, handoff_import extracts it verbatim, handoff_brief surfaces the README that carries the instructions."
+  }
+}

@@ -1,0 +1,11 @@
+# Development files (not shipped to npm)
+test/
+docs/
+.reference-private/
+.github/
+.gitignore
+.env
+.env.*
+*.log
+*.tgz
+node_modules/

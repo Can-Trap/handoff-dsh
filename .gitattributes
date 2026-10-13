@@ -1,0 +1,12 @@
+# The bundled scripts carry `#!/usr/bin/env node` shebangs and are run directly, so
+# they must keep LF everywhere — a CRLF shebang line breaks them on Unix.
+*.js   text eol=lf
+*.yml  text eol=lf
+*.json text eol=lf
+*.md   text eol=lf
+*.svg  text eol=lf
+
+# Archives and font binaries are deltas nothing can diff.
+*.zip   binary
+*.gz    binary
+*.woff2 binary

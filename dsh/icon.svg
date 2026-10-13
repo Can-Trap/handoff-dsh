@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Handoff receiver for DeepSeek Harness">
+  <defs>
+    <linearGradient id="hddin" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2891e2"/>
+      <stop offset="1" stop-color="#1b6fb5"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="14" fill="url(#hddin)"/>
+  <!-- the bundle arriving -->
+  <rect x="18" y="9" width="28" height="18" rx="3" fill="none" stroke="#fff" stroke-width="2.4" opacity=".95"/>
+  <path d="M25 18h14" stroke="#fff" stroke-width="2.4" stroke-linecap="round" opacity=".95"/>
+  <!-- the arrow into the tray -->
+  <path d="M32 29v11" stroke="#fff" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M27 35.5 32 40.5 37 35.5" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- the tray it lands in -->
+  <path d="M17 44v7a4 4 0 0 0 4 4h22a4 4 0 0 0 4-4v-7" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" opacity=".95"/>
+</svg>
