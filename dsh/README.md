@@ -106,16 +106,22 @@ That is the whole install. To remove it, `plugin_manager remove_bundle
 
 ## The second transport
 
-`cordis.patch.yml` also ships the Open Design MCP server as a stdio client row,
-under the id `od-mcp`. It is **disabled by default**: `od` is installed
-with the Open Design desktop app and is usually not on PATH, and a row whose
-command cannot be spawned fails activation. Once `od mcp` runs on this machine:
+A handoff can also be read **live** over MCP instead of from an archive. This
+bundle deliberately does **not** ship that client row, for two reasons that both
+bite:
 
-```
-plugin_manager set_plugin od-mcp enabled:true
-```
+- **The endpoint is machine-specific.** `od` is not on PATH; the real server is the
+  Open Design desktop app's own binary running `daemon-cli.mjs` with
+  `ELECTRON_RUN_AS_NODE=1`. And `od mcp` refuses to start without either
+  `OD_SIDECAR_CLIENT_ENDPOINT` (a named pipe carrying a per-install GUID) or an
+  explicit `--daemon-url` — the app binds a fresh port on every launch.
+- **`serverName` must be unique across live mcp-client instances**, so two bundles
+  shipping an `opendesign` row collide — which is what this one and `sync-dsh`
+  both did.
 
-The server's tools then appear as `mcp__opendesign__*` (`get_project`,
+So the row belongs to your **profile** patch, which is local and never published.
+`sync-dsh`'s `cordis.patch.yml` carries a ready-to-paste snippet; the values are
+the same. The server's tools then appear as `mcp__opendesign__*` (`get_project`,
 `get_active_context`, `get_file`, `list_files`, `search_files`, …), which is the
 same surface `scripts/hdd-prompt.js` names when it emits the MCP form of the
 handoff prompt.

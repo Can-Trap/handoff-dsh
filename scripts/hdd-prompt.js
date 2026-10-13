@@ -85,22 +85,38 @@ const target = instructions || (focus.length === 1 ? `\`${focus[0]}\`` : "the se
  * Upstream this was one substring: `od mcp install <agent>`. That covers every
  * agent Open Design ships an installer for, and DeepSeek Harness is not one of
  * them — `od mcp install dsh` does not exist. So for `dsh` the prompt hands over
- * the client row itself: the same row the companion bundle in `dsh/` ships (there
- * disabled, because `od` is not on PATH until Open Design is running). */
+ * the client row itself.
+ *
+ * The row is machine-specific and therefore lives in the receiving machine's own
+ * profile patch, not in any bundle: `od` is NOT on PATH (the real server is the
+ * desktop app's binary with ELECTRON_RUN_AS_NODE=1), and `od mcp` refuses to start
+ * without either the sidecar pipe or an explicit --daemon-url, because the app
+ * binds a fresh port on every launch. */
 
 const DSH_REGISTRATION =
   "`od mcp` speaks MCP over stdio, and DeepSeek Harness accepts any stdio server as one\n" +
-  "`@deepseek-ai/dsh-mcp-client` row — there is no `od mcp install dsh`. Add the row\n" +
-  "yourself, or enable the one the companion bundle in `dsh/` already ships:\n" +
+  "`@deepseek-ai/dsh-mcp-client` row — there is no `od mcp install dsh`. Add the row to the\n" +
+  "receiving machine's profile patch; it carries a per-install endpoint, so no bundle ships it:\n" +
   "\n" +
-  "    - insert:\n" +
-  "        - id: od-mcp\n" +
-  "          name: '@deepseek-ai/dsh-mcp-client'\n" +
-  "          config:\n" +
-  "            serverName: opendesign\n" +
-  "            transport: stdio\n" +
-  "            command: od\n" +
-  "            args: [mcp]\n";
+  "    - id: opendesign-mcp\n" +
+  "      name: '@deepseek-ai/dsh-mcp-client'\n" +
+  "      config:\n" +
+  "        serverName: opendesign\n" +
+  "        transport: stdio\n" +
+  "        command: '<LOCALAPPDATA>\\Programs\\Open Design\\Open Design.exe'\n" +
+  "        args:\n" +
+  "          - '<LOCALAPPDATA>\\Programs\\Open Design\\resources\\app\\prebundled\\daemon\\daemon-cli.mjs'\n" +
+  "          - 'mcp'\n" +
+  "        env:\n" +
+  "          ELECTRON_RUN_AS_NODE: '1'\n" +
+  "          OD_DATA_DIR: '<APPDATA>\\Open Design\\namespaces\\<namespace>\\data'\n" +
+  "          OD_SIDECAR_CLIENT_ENDPOINT: '\\\\.\\pipe\\open-design-sidecar-<guid>'\n" +
+  "          OD_MCP_BOOTSTRAP_COMMAND: '<LOCALAPPDATA>\\Programs\\Open Design\\Open Design.exe'\n" +
+  "          OD_MCP_BOOTSTRAP_ARGS: '[\"--headless\"]'\n" +
+  "        failOnStartupError: true\n" +
+  "\n" +
+  "`od` is not on PATH — that binary is the desktop app's. Take `<namespace>` and `<guid>` from\n" +
+  "the registration Open Design writes for VS Code.\n";
 
 /* ── prompt forms ───────────────────────────────────────────────────────────── */
 

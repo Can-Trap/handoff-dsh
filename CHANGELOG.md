@@ -31,8 +31,11 @@ lineage.
   recomputes the tree digest from the archive's own decoded bytes and requires it to match, file by
   file. The reader is a separate implementation on purpose: a verifier that shared the writer's code
   would agree with its bugs.
-- An optional `@deepseek-ai/dsh-mcp-client` row in the bundle's patch, shipped **disabled**, so a
-  handoff can also be read live over MCP once `od mcp` runs on the machine.
+- The MCP form of the handoff prompt emits a ready-to-paste `@deepseek-ai/dsh-mcp-client` row, so a
+  handoff can also be read live. The row is **not** shipped in a bundle: its endpoint is
+  per-install (`OD_SIDECAR_CLIENT_ENDPOINT` is a named pipe carrying a GUID, and the app binds a
+  fresh port every launch) and `serverName` must be unique across live mcp-client instances, so two
+  bundles shipping one collide.
 - `references/dsh-transport.md` is not needed: `SKILL.md`, `RUNBOOK.md`, `bundle-contract.md`,
   `mcp-contract.md` and `dsh/README.md` each cover the receiving side where it belongs.
 

@@ -1,31 +1,23 @@
 # The receiving end of a handoff-dsh bundle, for DeepSeek Harness.
 #
-# Row 1 is this bundle's Host plugin: handoff_inspect / handoff_import /
-# handoff_brief. It is the archive transport, and it re-reads the container
-# itself (ZIP central directory and CRCs, or ustar/pax headers) instead of
-# shelling out, so the verification does not share code with the writer.
+# One row: this bundle's Host plugin — handoff_inspect / handoff_import /
+# handoff_brief. It re-reads the container itself (ZIP central directory and
+# CRCs, or ustar/pax headers) instead of shelling out, so the verification does
+# not share code with the writer.
 #
-# Row 2 is the OTHER transport: the Open Design MCP server (`od mcp`) as a stdio
-# client, so a handoff can be read live and never goes stale. It ships DISABLED
-# because `od` is installed with the Open Design desktop app and is usually not
-# on PATH, and a row whose command cannot be spawned fails activation. Enable it
-# once `od mcp` runs on this machine:
+# This bundle deliberately does NOT ship the Open Design MCP client row. A
+# handoff can also be read LIVE over MCP, but the endpoint is machine-specific:
+# `od mcp` refuses to start without either `OD_SIDECAR_CLIENT_ENDPOINT` (a named
+# pipe carrying a per-install GUID) or `--daemon-url` (a port that changes every
+# launch), so there is no portable value to commit. And `serverName` must be
+# unique across live mcp-client instances, so two bundles shipping an
+# `opendesign` row collide — which is what this one and sync-dsh both did.
 #
-#     plugin_manager set_plugin od-mcp enabled:true
-#
-# The same snippet is what scripts/hdd-prompt.js hands a receiving agent when it
-# emits the MCP form of the handoff prompt.
+# The row therefore belongs to the PROFILE patch, which is local and never
+# published. See sync-dsh's cordis.patch.yml for the ready-to-paste snippet; the
+# values are the same. Its tools then appear as mcp__opendesign__*, and the MCP
+# form of the handoff prompt (scripts/hdd-prompt.js) names `od mcp` for exactly
+# that server.
 - insert:
     - id: handoff-tools
       name: '@local/dsh-handoff'
-
-    - id: od-mcp
-      name: '@deepseek-ai/dsh-mcp-client'
-      disabled: true
-      config:
-        serverName: opendesign
-        transport: stdio
-        command: od
-        args:
-          - mcp
-        failOnStartupError: true

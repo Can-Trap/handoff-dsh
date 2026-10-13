@@ -46,10 +46,16 @@ daemon owns artifact bookkeeping.
 **`dsh` is not on that `od mcp install` list, and `od mcp install dsh` does not exist.** DeepSeek
 Harness — this plugin's default receiving end — accepts any stdio server as a
 `@deepseek-ai/dsh-mcp-client` bundle row, so `hdd-prompt.js --agent dsh` hands over the row itself
-rather than a command that would fail: `serverName: opendesign`, `transport: stdio`, `command: od`,
-`args: [mcp]`. The companion bundle at `dsh/` ships the same row, disabled there, because `od` is not
-on PATH until Open Design is running. Every other `--agent` value still emits the upstream
-`od mcp install <agent>` sentence.
+rather than a command that would fail.
+
+That row is **machine-specific and ships in no bundle**, because two facts about it cannot be made
+portable: `od` is not on PATH (the real server is the Open Design desktop app's own binary running
+`daemon-cli.mjs` with `ELECTRON_RUN_AS_NODE=1`), and `od mcp` refuses to start without either
+`OD_SIDECAR_CLIENT_ENDPOINT` — a named pipe carrying a per-install GUID — or an explicit
+`--daemon-url`, since the app binds a fresh port on every launch. It also carries `serverName:
+opendesign`, which must be unique across live mcp-client instances. So it lives in the receiving
+machine's profile patch; `hdd-prompt.js` emits it ready to paste. Every other `--agent` value still
+emits the upstream `od mcp install <agent>` sentence.
 
 ## Export
 
