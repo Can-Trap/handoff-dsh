@@ -5,9 +5,13 @@ facts and pass them in as flags.
 
 ## MCP tools
 
+All **22** tools below were verified by handshaking with a running daemon over stdio:
+`initialize` answers `{"name":"open-design","version":"0.2.0"}` and `tools/list` returns exactly this
+set. Older revisions of this document listed 16 of them; the six marked ★ were added since.
+
 | Tool | Params | Use in this plugin |
 |---|---|---|
-| `get_active_context` | none | **the entry file.** Returns the active project and file; expires ~5 min after the last interaction |
+| `get_active_context` | none | **the entry file.** Returns the active project and file; expires ~5 min after the last interaction. Answers `{active:false, hint}` rather than failing |
 | `get_project` | `project?` | display name, `resolvedDir` -> `--project-name`, `--project-dir` |
 | `list_projects` | none | when the user names a project you must resolve |
 | `list_files` | `project?`, `since?` | name, path, mime, kind, size, mtime |
@@ -19,9 +23,20 @@ facts and pass them in as flags.
 | `delete_file` | `path` | one file |
 | `start_run` / `get_run` / `cancel_run` | `plugin`, `inputs`, `project?`, `agent?` | how a plugin workflow is invoked from an agent |
 | `list_plugins` / `list_skills` / `list_agents` | none | discovery |
+| ★ `collect_brief` | `artifactType`, `projectTitle?`, … | open the interactive brief card; needs a UI, so a headless handoff should pass `skip` or pre-supplied answers |
+| ★ `confirm_brief` | brief draft + `answers` | returns the readable brief to reuse; the draft id and nonce are internal widget data, never user-facing copy |
+| ★ `create_project` | `name`, `designSystem?`, `skill?` | create an empty project to generate into — the counterpart of `get_project` when a handoff targets somewhere new |
+| ★ `delete_project` | explicit `project` **and** `confirm: true` | irreversible, and there is deliberately no active-project fallback |
+| ★ `start_vela_login` / `get_vela_login_status` | none | OpenDesign Cloud browser sign-in; exposes no credentials |
+
+**Client resources, not tools.** A connected client also sees the daemon's resource catalogue:
+`ui://open-design/artifact-card-v8.html` (the brief card), `od://focus/active` (the same active
+context as JSON), `od://skills/<id>/SKILL.md` and `od://design-systems/<id>/DESIGN.md`. The last is
+the design-system pull layer this plugin's `--design-system` work reads.
 
 **Does not exist:** `render_preview`, etags / `if_match`, a project ZIP export route, a
-`write_files` batch on this surface.
+`write_files` batch on this surface. That batch write belongs to a *different* optional server
+("DesignSync MCP"); do not look for it here.
 
 ## CLI
 
